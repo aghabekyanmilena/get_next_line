@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: miaghabe <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: miaghabe <miaghabe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/29 13:38:14 by miaghabe          #+#    #+#             */
-/*   Updated: 2025/01/29 21:51:14 by miaghabe         ###   ########.fr       */
+/*   Updated: 2025/01/30 00:51:49 by miaghabe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ static char	*set_line(char *line_buffer)
 	char	*left;
 	ssize_t	i;
 
+	if (!line_buffer)
+		return (NULL);
 	i = 0;
 	while (line_buffer[i] && line_buffer[i] != '\n' && line_buffer[i] != '\0')
 		i++;
@@ -62,22 +64,19 @@ char	*get_next_line(int fd)
 	char		*line;
 	char		*buffer;
 
-	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
+	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	buffer = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char));
 	if (!buffer)
 		return (NULL);
 	line = fill_line(fd, left, buffer);
 	free(buffer);
-	if (!buffer)
+	if (!line)
+	{
+		free(left);
+		left = NULL;
 		return (NULL);
+	}
 	left = set_line(line);
 	return (line);
 }
-
-// int main()
-// {
-// 	int fd = open("file.txt", O_RDONLY);
-// 	printf("%s", get_next_line(fd));
-// 	return (0);	
-// }
