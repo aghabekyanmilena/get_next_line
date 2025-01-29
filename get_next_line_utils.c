@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: miaghabe <miaghabe@student.42.fr>          +#+  +:+       +#+        */
+/*   By: miaghabe <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/26 21:08:11 by miaghabe          #+#    #+#             */
-/*   Updated: 2025/01/26 21:16:58 by miaghabe         ###   ########.fr       */
+/*   Created: 2025/01/29 13:39:37 by miaghabe          #+#    #+#             */
+/*   Updated: 2025/01/29 20:12:26 by miaghabe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,4 +78,33 @@ char	*ft_strchr(const char *str, int c)
 		return ((char *)&str[i]);
 	else
 		return (NULL);
+}
+
+char	*ft_substr(char const *s, unsigned int start, size_t len)
+{
+	unsigned int	s_size;
+	size_t			i;
+	char			*substr;
+
+	if (!s)
+		return (NULL);
+	s_size = ft_strlen(s);
+	if (start >= s_size)
+	{
+		substr = (char *)malloc(1);
+		if (!substr)
+			return (NULL);
+		substr[0] = '\0';
+		return (substr);
+	}
+	if (len > s_size - start)
+		len = s_size - start;
+	substr = (char *)malloc((len + 1) * sizeof(char));
+	if (!substr)
+		return (NULL);
+	i = 0;
+	while (i < len)
+		substr[i++] = s[start++];
+	substr[i] = '\0';
+	return (substr);
 }

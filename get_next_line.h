@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: miaghabe <miaghabe@student.42.fr>          +#+  +:+       +#+        */
+/*   By: miaghabe <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/26 21:14:25 by miaghabe          #+#    #+#             */
-/*   Updated: 2025/01/26 21:18:19 by miaghabe         ###   ########.fr       */
+/*   Created: 2025/01/29 15:44:55 by miaghabe          #+#    #+#             */
+/*   Updated: 2025/01/29 19:14:17 by miaghabe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define GET_NEXT_LINE_H
 
 # ifndef BUFFER_SIZE
-# define BUFFER_SIZE 42
+#  define BUFFER_SIZE 42
 # endif
 # include <unistd.h>
 # include <stdio.h>
@@ -22,9 +22,11 @@
 # include <stdlib.h>
 # include <stddef.h>
 
-char	*ft_strdup(char *s1, int dir);
-size_t	ft_strlen(char *src);
+char	*get_next_line(int fd);
+char	*ft_substr(char const *s, unsigned int start, size_t len);
+char	*ft_strdup(char *str);
 char	*ft_strjoin(char *s1, char *s2);
-int		ft_strchr(char *s, int c);
+size_t	ft_strlen(const char *src);
+char	*ft_strchr(const char *str, int c);
 
 #endif
