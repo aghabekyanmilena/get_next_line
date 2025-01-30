@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: miaghabe <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: miaghabe <miaghabe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 01:12:15 by miaghabe          #+#    #+#             */
-/*   Updated: 2025/01/30 21:18:22 by miaghabe         ###   ########.fr       */
+/*   Updated: 2025/01/30 23:28:41 by miaghabe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,12 +60,12 @@ static char	*fill_line(int fd, char *left, char *buffer)
 
 char	*get_next_line(int fd)
 {
-	static char	*left[OPEN_MAX];
+	static char	*left[FOPEN_MAX];
 	char		*line;
 	char		*buffer;
 
 	buffer = NULL;
-	if (fd < 0 || BUFFER_SIZE <= 0 || fd > OPEN_MAX)
+	if (fd < 0 || BUFFER_SIZE <= 0 || fd >= FOPEN_MAX)
 	{
 		free(left[fd]);
 		free(buffer);
