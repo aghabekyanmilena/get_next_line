@@ -6,7 +6,7 @@
 /*   By: miaghabe <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/29 13:39:37 by miaghabe          #+#    #+#             */
-/*   Updated: 2025/01/29 20:12:26 by miaghabe         ###   ########.fr       */
+/*   Updated: 2025/01/30 16:07:37 by miaghabe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ size_t	ft_strlen(const char *src)
 	if (!src)
 		return (0);
 	i = 0;
-	while (src[i])
+	while (src[i] != '\0')
 		i++;
 	return (i);
 }

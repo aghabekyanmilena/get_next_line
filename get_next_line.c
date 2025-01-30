@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: miaghabe <miaghabe@student.42.fr>          +#+  +:+       +#+        */
+/*   By: miaghabe <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/29 13:38:14 by miaghabe          #+#    #+#             */
-/*   Updated: 2025/01/30 00:51:49 by miaghabe         ###   ########.fr       */
+/*   Updated: 2025/01/30 15:58:59 by miaghabe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,17 @@ static char	*set_line(char *line_buffer)
 	i = 0;
 	while (line_buffer[i] && line_buffer[i] != '\n' && line_buffer[i] != '\0')
 		i++;
-	if (line_buffer[i] == '\0')
+	if (line_buffer[i] == '\0' || line_buffer[i + 1] == '\0')
 		return (NULL);
 	left = ft_substr(line_buffer, i + 1, ft_strlen(line_buffer) - i);
 	if (!left)
 		return (NULL);
 	line_buffer[i + 1] = '\0';
+	if (*left == '\0')
+	{
+		free(left);
+		left = NULL;
+	}
 	return (left);
 }
 
@@ -43,6 +48,7 @@ static char	*fill_line(int fd, char *left, char *buffer)
 		if (read_bytes == -1)
 		{
 			free(left);
+			left = NULL;
 			return (NULL);
 		}
 		if (read_bytes == 0)
@@ -60,7 +66,7 @@ static char	*fill_line(int fd, char *left, char *buffer)
 
 char	*get_next_line(int fd)
 {
-	static char	*left;
+	static char	*left = NULL;
 	char		*line;
 	char		*buffer;
 
@@ -71,10 +77,10 @@ char	*get_next_line(int fd)
 		return (NULL);
 	line = fill_line(fd, left, buffer);
 	free(buffer);
-	if (!line)
+	if (!line || *line == '\0')
 	{
-		free(left);
-		left = NULL;
+		free(line);
+		line = NULL; // free(left);
 		return (NULL);
 	}
 	left = set_line(line);
