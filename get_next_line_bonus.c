@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: miaghabe <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/29 13:38:14 by miaghabe          #+#    #+#             */
-/*   Updated: 2025/01/30 18:42:40 by miaghabe         ###   ########.fr       */
+/*   Created: 2025/01/30 01:12:15 by miaghabe          #+#    #+#             */
+/*   Updated: 2025/01/30 18:54:20 by miaghabe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 static char	*set_line(char *line_buffer)
 {
@@ -22,14 +22,12 @@ static char	*set_line(char *line_buffer)
 	i = 0;
 	while (line_buffer[i] && line_buffer[i] != '\n' && line_buffer[i] != '\0')
 		i++;
-	if (line_buffer[i] == '\0' || line_buffer[i + 1] == '\0')
+	if (line_buffer[i] == '\0')
 		return (NULL);
 	left = ft_substr(line_buffer, i + 1, ft_strlen(line_buffer) - i);
 	if (!left)
 		return (NULL);
 	line_buffer[i + 1] = '\0';
-	if (*left == '\0')
-		left = NULL;
 	return (left);
 }
 
@@ -43,18 +41,17 @@ static char	*fill_line(int fd, char *left, char *buffer)
 	{
 		read_bytes = read(fd, buffer, BUFFER_SIZE);
 		if (read_bytes == -1)
+		{
+			free(left);
 			return (NULL);
-		else if (read_bytes == 0)
+		}
+		if (read_bytes == 0)
 			break ;
 		buffer[read_bytes] = '\0';
 		tmp = left;
 		left = ft_strjoin(tmp, buffer);
 		if (!left)
-		{
-			free(tmp);
-			tmp = NULL;
 			return (NULL);
-		}
 		if (ft_strchr(buffer, '\n'))
 			break ;
 	}
@@ -63,7 +60,7 @@ static char	*fill_line(int fd, char *left, char *buffer)
 
 char	*get_next_line(int fd)
 {
-	static char	*left = NULL;
+	static char	*left[OPEN_MAX];
 	char		*line;
 	char		*buffer;
 
@@ -89,9 +86,3 @@ char	*get_next_line(int fd)
 	left = set_line(line);
 	return (line);
 }
-
-// int main()
-// {
-// 	int fd = open ("get_next_line.c", O_RDONLY);
-// 	get_next_line(fd);
-// }

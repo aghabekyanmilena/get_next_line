@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line_utils.c                              :+:      :+:    :+:   */
+/*   get_next_line_utils_bonus.c                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: miaghabe <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/29 13:39:37 by miaghabe          #+#    #+#             */
-/*   Updated: 2025/01/30 18:50:15 by miaghabe         ###   ########.fr       */
+/*   Created: 2025/01/30 01:08:21 by miaghabe          #+#    #+#             */
+/*   Updated: 2025/01/30 18:52:45 by miaghabe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 size_t	ft_strlen(const char *src)
 {
@@ -19,7 +19,7 @@ size_t	ft_strlen(const char *src)
 	if (!src)
 		return (0);
 	i = 0;
-	while (src[i] != '\0')
+	while (src[i])
 		i++;
 	return (i);
 }
@@ -46,7 +46,6 @@ char	*ft_strjoin(char *s1, char *s2)
 		res[i++] = s2[j++];
 	res[i] = '\0';
 	free(s1);
-	s1 = NULL;
 	return (res);
 }
 
