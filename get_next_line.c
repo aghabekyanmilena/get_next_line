@@ -6,7 +6,7 @@
 /*   By: miaghabe <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/29 13:38:14 by miaghabe          #+#    #+#             */
-/*   Updated: 2025/01/30 18:42:40 by miaghabe         ###   ########.fr       */
+/*   Updated: 2025/01/30 20:29:41 by miaghabe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,5 +93,6 @@ char	*get_next_line(int fd)
 // int main()
 // {
 // 	int fd = open ("get_next_line.c", O_RDONLY);
-// 	get_next_line(fd);
+// 	for (int i = 0; i < 20; i++)
+// 		printf("%s", get_next_line(fd));
 // }

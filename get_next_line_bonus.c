@@ -6,7 +6,7 @@
 /*   By: miaghabe <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 01:12:15 by miaghabe          #+#    #+#             */
-/*   Updated: 2025/01/30 18:54:20 by miaghabe         ###   ########.fr       */
+/*   Updated: 2025/01/30 21:18:22 by miaghabe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,25 +64,25 @@ char	*get_next_line(int fd)
 	char		*line;
 	char		*buffer;
 
-	buffer = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char));
-	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
+	buffer = NULL;
+	if (fd < 0 || BUFFER_SIZE <= 0 || fd > OPEN_MAX)
 	{
-		free(left);
+		free(left[fd]);
 		free(buffer);
-		left = NULL;
+		left[fd] = NULL;
 		buffer = NULL;
 		return (NULL);
 	}
+	buffer = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char));
 	if (!buffer)
 		return (NULL);
-	line = fill_line(fd, left, buffer);
+	line = fill_line(fd, left[fd], buffer);
 	free(buffer);
-	buffer = NULL;
 	if (!line || *line == '\0')
 	{
 		free(line);
 		return (NULL);
 	}
-	left = set_line(line);
+	left[fd] = set_line(line);
 	return (line);
 }

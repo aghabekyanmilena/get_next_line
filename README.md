@@ -1,115 +1,225 @@
-1. set_line(char *line_buffer)
-Purpose:
+This code implements a `get_next_line` function that reads a file descriptor line by line, handling newline characters and buffering. Let’s go through it **line by line**, function by function.
 
-This function extracts the portion of the string after the first newline (\n).
-It also modifies line_buffer to ensure that it ends at the first newline.
-Step-by-step explanation:
+---
 
-Find the position of the first newline (\n) or the null terminator (\0).
-The loop runs through line_buffer until it finds \n or \0.
-If there is no newline (\n), return NULL.
-This means the entire buffer has been processed.
-Extract the part of the string after the newline.
-ft_substr(line_buffer, i + 1, ft_strlen(line_buffer) - i) creates a new string that contains everything after the newline.
-Set the character after the newline to \0 to terminate the first part of the string.
-This ensures that line_buffer only contains the current line.
-Return the remaining part of the buffer.
-This is stored in left for future calls to get_next_line.
+## **1. `set_line` function**
+This function extracts the remaining part of the buffer after a newline (`\n`) and ensures that `line_buffer` only contains a single line.
 
-2. fill_line(int fd, char *left, char *buffer)
-Purpose:
+```c
+static char	*set_line(char *line_buffer)
+```
+- Declares a static function `set_line` that takes a `char *line_buffer` and returns a `char *`.  
+- The function is **static**, meaning it is only accessible within the file where it is defined.
 
-This function reads the file chunk by chunk and joins the contents together until a newline (\n) is found.
-Step-by-step explanation:
+```c
+char	*left;
+ssize_t	i;
+```
+- Declares `left` (which will store the remaining part of the buffer after `\n`) and `i` (used as an index).
 
-Initialize read_bytes to 1 to enter the loop.
-Read BUFFER_SIZE bytes from the file into buffer.
-read(fd, buffer, BUFFER_SIZE) reads up to BUFFER_SIZE characters from the file.
-If read() fails, free memory and return NULL.
-This happens when read() returns -1.
-If read_bytes == 0, stop reading.
-This means we have reached the end of the file.
-Null-terminate buffer at the end of the data read.
-Join the newly read data to the existing left string.
-ft_strjoin(tmp, buffer) appends buffer to left.
-If a newline (\n) is found in buffer, stop reading.
-We only need to read enough to complete one line.
+```c
+if (!line_buffer)
+	return (NULL);
+```
+- If `line_buffer` is `NULL`, return `NULL` immediately.
 
-3. get_next_line(int fd)
-Purpose:
+```c
+i = 0;
+while (line_buffer[i] && line_buffer[i] != '\n' && line_buffer[i] != '\0')
+	i++;
+```
+- Iterates over `line_buffer` until it reaches a newline (`\n`) or the end of the string (`\0`).
 
-This is the main function that returns one line at a time from the file descriptor (fd).
-Step-by-step explanation:
+```c
+if (line_buffer[i] == '\0' || line_buffer[i + 1] == '\0')
+	return (NULL);
+```
+- If the newline was **not found**, or if it is **at the end of the buffer**, there is no remaining text, so return `NULL`.
 
-Check if the file descriptor (fd) is valid.
-If fd < 0, return NULL.
-Allocate memory for the buffer that will store data read from the file.
-Call fill_line() to read the next line from the file.
-This function reads data and appends it to left.
-Free the buffer after reading.
-Extract the next line from the buffer using set_line().
-set_line() splits the buffer into the current line and the remaining part.
-Return the extracted line.
+```c
+left = ft_substr(line_buffer, i + 1, ft_strlen(line_buffer) - i);
+```
+- Calls `ft_substr` to extract everything **after** `\n` into `left`.
 
-Helper Functions:
+```c
+if (!left)
+	return (NULL);
+```
+- If `ft_substr` fails (e.g., memory allocation fails), return `NULL`.
 
-4. ft_strlen(const char *src)
-Purpose:
+```c
+line_buffer[i + 1] = '\0';
+```
+- Truncates `line_buffer` at `i + 1`, ensuring it only contains the first line.
 
-Counts the number of characters in a string until the null terminator (\0).
-Step-by-step explanation:
+```c
+if (*left == '\0')
+	left = NULL;
+```
+- If `left` is empty (e.g., no more content after `\n`), set `left` to `NULL`.
 
-If src is NULL, return 0.
-Use a loop to count characters until \0.
+```c
+return (left);
+```
+- Returns the remaining part of the buffer (`left`).
 
-5. ft_strdup(char *str)
-Purpose:
+---
 
-Creates a duplicate of a given string.
-Step-by-step explanation:
+## **2. `fill_line` function**
+This function reads from the file descriptor into a buffer and appends it to the existing string (`left`) until it finds a newline (`\n`) or reaches the end of the file.
 
-Allocate memory for a new string of the same length.
-Copy characters one by one.
-Return the new copy.
+```c
+static char	*fill_line(int fd, char *left, char *buffer)
+```
+- A **static** function that reads from file descriptor `fd`, updates `left`, and returns the updated string.
 
-6. ft_strjoin(char *s1, char *s2)
-Purpose:
+```c
+ssize_t	read_bytes;
+char	*tmp;
+```
+- Declares `read_bytes` (stores the number of bytes read) and `tmp` (a temporary pointer for string joining).
 
-Joins two strings together into a new allocated string.
-Step-by-step explanation:
+```c
+read_bytes = 1;
+while (read_bytes > 0)
+```
+- Initializes `read_bytes = 1` and starts a loop to read from `fd` until EOF (read returns `0`).
 
-Compute the total length of s1 and s2.
-Allocate memory for the new string.
-Copy s1 into the new string.
-Append s2 to it.
-Free the old s1 to prevent memory leaks.
-Return the new string.
+```c
+read_bytes = read(fd, buffer, BUFFER_SIZE);
+```
+- Reads up to `BUFFER_SIZE` bytes from `fd` into `buffer`.
 
-7. ft_strchr(const char *str, int c)
-Purpose:
+```c
+if (read_bytes == -1)
+	return (NULL);
+```
+- If `read` fails, return `NULL`.
 
-Finds the first occurrence of a character c in str.
-Step-by-step explanation:
+```c
+else if (read_bytes == 0)
+	break ;
+```
+- If `read_bytes == 0`, **EOF is reached**, so break the loop.
 
-Loop through str until c is found or the string ends.
-Return the address of c if found, otherwise return NULL.
+```c
+buffer[read_bytes] = '\0';
+```
+- Null-terminate the buffer (since `read` does not append `\0`).
 
-8. ft_substr(char const *s, unsigned int start, size_t len)
-Purpose:
+```c
+tmp = left;
+left = ft_strjoin(tmp, buffer);
+```
+- Joins `left` and `buffer` into a new string using `ft_strjoin`.
 
-Extracts a substring from a string starting at start for len characters.
-Step-by-step explanation:
+```c
+if (!left)
+{
+	free(tmp);
+	tmp = NULL;
+	return (NULL);
+}
+```
+- If `ft_strjoin` fails, free `tmp` and return `NULL`.
 
-If s is NULL, return NULL.
-Check if start is beyond the length of s. If so, return an empty string.
-If len is greater than the remaining string length, adjust it.
-Allocate memory for the substring.
-Copy characters from s[start] to s[start + len].
-Return the new substring.
-How It Works Together
-get_next_line(fd) calls fill_line(fd, left, buffer).
-fill_line() reads the file chunk by chunk and appends to left.
-Once a newline (\n) is found, fill_line() returns the full line.
-get_next_line() then calls set_line() to extract the remaining part of left for the next call.
-get_next_line() returns the extracted line.
-This cycle repeats until the entire file is read.
+```c
+if (ft_strchr(buffer, '\n'))
+	break ;
+```
+- If `buffer` contains a newline (`\n`), stop reading more data.
+
+```c
+return (left);
+```
+- Returns the updated `left`.
+
+---
+
+## **3. `get_next_line` function**
+This function orchestrates reading and processing a line from the file descriptor.
+
+```c
+char	*get_next_line(int fd)
+```
+- Main function that reads from `fd` and returns a single line.
+
+```c
+static char	*left = NULL;
+```
+- Declares a **static** `left` variable to keep track of leftover text between function calls.
+
+```c
+char		*line;
+char		*buffer;
+```
+- Declares `line` (stores the final line to return) and `buffer` (temporary buffer for reading).
+
+```c
+buffer = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char));
+```
+- Allocates memory for `buffer` (`BUFFER_SIZE + 1` to hold `\0`).
+
+```c
+if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
+```
+- Checks for **invalid file descriptor** (`fd < 0`), **invalid buffer size** (`BUFFER_SIZE <= 0`), or **read error** (`read(fd, 0, 0) < 0`).
+
+```c
+free(left);
+free(buffer);
+left = NULL;
+buffer = NULL;
+return (NULL);
+```
+- If an error occurs, **free everything** and return `NULL`.
+
+```c
+if (!buffer)
+	return (NULL);
+```
+- If `malloc` for `buffer` fails, return `NULL`.
+
+```c
+line = fill_line(fd, left, buffer);
+```
+- Calls `fill_line` to read from `fd` and get a full line.
+
+```c
+free(buffer);
+buffer = NULL;
+```
+- Frees `buffer` after reading.
+
+```c
+if (!line || *line == '\0')
+```
+- If `line` is `NULL` or an empty string:
+
+```c
+free(line);
+return (NULL);
+```
+- Free `line` and return `NULL`.
+
+```c
+left = set_line(line);
+```
+- Calls `set_line` to extract remaining data **after** the newline.
+
+```c
+return (line);
+```
+- Returns the extracted **line**.
+
+---
+
+## **Summary**
+- `get_next_line` calls `fill_line` to read the next line from the file descriptor.
+- `fill_line` appends data into `left` until a newline (`\n`) is found or EOF is reached.
+- `set_line` extracts the remaining text after the newline and updates `left` for future calls.
+- The function is optimized to **persist between function calls** using `static char *left`.
+
+---
+
+Would you like further optimizations or debugging tips? 🚀

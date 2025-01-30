@@ -6,7 +6,7 @@
 /*   By: miaghabe <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 01:08:21 by miaghabe          #+#    #+#             */
-/*   Updated: 2025/01/30 18:52:45 by miaghabe         ###   ########.fr       */
+/*   Updated: 2025/01/30 21:07:28 by miaghabe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ size_t	ft_strlen(const char *src)
 	if (!src)
 		return (0);
 	i = 0;
-	while (src[i])
+	while (src[i] != '\0')
 		i++;
 	return (i);
 }
@@ -46,6 +46,7 @@ char	*ft_strjoin(char *s1, char *s2)
 		res[i++] = s2[j++];
 	res[i] = '\0';
 	free(s1);
+	s1 = NULL;
 	return (res);
 }
 
