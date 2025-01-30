@@ -219,7 +219,3 @@ return (line);
 - `fill_line` appends data into `left` until a newline (`\n`) is found or EOF is reached.
 - `set_line` extracts the remaining text after the newline and updates `left` for future calls.
 - The function is optimized to **persist between function calls** using `static char *left`.
-
----
-
-Would you like further optimizations or debugging tips? 🚀
