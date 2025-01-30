@@ -6,7 +6,7 @@
 /*   By: miaghabe <miaghabe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 01:12:15 by miaghabe          #+#    #+#             */
-/*   Updated: 2025/01/30 23:28:41 by miaghabe         ###   ########.fr       */
+/*   Updated: 2025/01/31 00:07:01 by miaghabe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,8 +64,8 @@ char	*get_next_line(int fd)
 	char		*line;
 	char		*buffer;
 
-	buffer = NULL;
-	if (fd < 0 || BUFFER_SIZE <= 0 || fd >= FOPEN_MAX)
+	buffer = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char));
+	if (fd < 0 || BUFFER_SIZE <= 0 || fd > FOPEN_MAX)
 	{
 		free(left[fd]);
 		free(buffer);
@@ -73,16 +73,41 @@ char	*get_next_line(int fd)
 		buffer = NULL;
 		return (NULL);
 	}
-	buffer = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char));
 	if (!buffer)
 		return (NULL);
 	line = fill_line(fd, left[fd], buffer);
 	free(buffer);
+	buffer = NULL;
 	if (!line || *line == '\0')
 	{
-		free(line);
+		// free(line);
 		return (NULL);
 	}
 	left[fd] = set_line(line);
 	return (line);
 }
+
+// char	*get_next_line(int fd)
+// {
+// 	static char	*left[FOPEN_MAX];
+// 	char		*line;
+// 	char		*buffer;
+
+// 	if (fd < 0 || BUFFER_SIZE <= 0 || fd >= FOPEN_MAX)
+// 		return (NULL);
+// 	buffer = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char));
+// 	if (!buffer)
+// 		return (NULL);
+// 	line = fill_line(fd, left[fd], buffer);
+// 	free(buffer);
+// 	if (!line || *line == '\0')
+// 	{
+// 		free(line);
+// 		free(left[fd]);
+// 		left[fd] = NULL;
+// 		return (NULL);
+// 	}
+// 	free(left[fd]);
+// 	left[fd] = set_line(line);
+// 	return (line);
+// }
