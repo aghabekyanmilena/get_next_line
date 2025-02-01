@@ -13,10 +13,13 @@ This function efficiently handles buffered reading and retains any leftover data
 
 ## Functions
 1. set_line
+
 This function extracts the remaining part of the buffer after a newline (\n) andensures that line_buffer only contains a single line.
 2. fill_line
+
 This function reads from the file descriptor into a buffer and appends it to theexisting string (left) until it finds a newline (\n) or reaches the end of the file.
 3. get_next_line
+
 This function orchestrates reading and processing a line from the file descriptor.
 
 ## Testers
