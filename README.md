@@ -37,5 +37,5 @@ A string containing the next line (including the newline `\n` if present).
 Returns `NULL` if memory allocation fails or an invalid file descriptor is given
 
 ## Bonus Features
-The bonus version of `get_next_line` supports multiple file descriptors, meaningyou can read from multiple files simultaneously without mixing data.
+The bonus version of `get_next_line` supports multiple file descriptors, meaning you can read from multiple files simultaneously without mixing data.
 
